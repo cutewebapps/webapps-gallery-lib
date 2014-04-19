@@ -10,6 +10,9 @@ class Gallery_Image_Table extends DBx_Table
  * database table primary key
  */
     protected $_primary='gali_id';
+    
+    
+    
 }
 
 class Gallery_Image_List extends DBx_Table_Rowset
@@ -73,7 +76,7 @@ class Gallery_Image extends DBx_Table_Row
     
     protected function _insert()
     {
-        $this->gali_sort_order = Gallery_Image::Table()->getIterator( 'gali_sort_order');
+        $this->gali_sort_order = Gallery_Image::Table()->getIterator( 'gali_sort_order' );
 	$this->gali_dt_added = date('Y-m-d H:i:s' );
 	parent::_update();
     }
