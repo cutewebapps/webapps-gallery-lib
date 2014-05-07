@@ -34,6 +34,12 @@ class Gallery_Update extends App_Update
 	    if ( !( $tblImage->hasColumn( 'gali_caption' ) ))
     		$tblImage->addColumn( 'gali_caption', 'VARCHAR(100) DEFAULT \'\' NOT NULL' );
         }
+
+	    $tblEntry = Gallery_Entry::Table();
+	    if ( !( $tblEntry->hasColumn( 'gal_name' ) ))
+    		$tblEntry->addColumn( 'gal_name', 'VARCHAR(100) DEFAULT \'\' NOT NULL' );
+
+
         $this->save( self::VERSION );
     }
 
