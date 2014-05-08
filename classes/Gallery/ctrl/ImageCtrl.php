@@ -35,6 +35,14 @@ class Gallery_ImageCtrl extends App_DbTableCtrl
         }
     
     }
+
+    /**
+     * @return string
+     */
+    public function getSortableField()
+    {
+	return 'gali_sort_order';
+    }
     
     public function getlistAction()
     {

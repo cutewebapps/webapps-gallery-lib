@@ -1,5 +1,6 @@
 <?php
 
+
 class Gallery_EntryCtrl extends App_DbTableCtrl
 {
     protected function  _joinTables() 
@@ -11,6 +12,9 @@ class Gallery_EntryCtrl extends App_DbTableCtrl
 
     public function getAction()
     {
+
+// Sys_Debug::dumpDie( $this->_getAllParams() );
+
         if ( !$this->_hasParam('gal_id') ) {
             if ( $this->_hasParam('pg_slug') ) {
                 // allow to find by slug
