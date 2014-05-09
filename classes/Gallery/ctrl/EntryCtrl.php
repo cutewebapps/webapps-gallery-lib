@@ -1,6 +1,5 @@
 <?php
 
-
 class Gallery_EntryCtrl extends App_DbTableCtrl
 {
     protected function  _joinTables() 
@@ -8,6 +7,31 @@ class Gallery_EntryCtrl extends App_DbTableCtrl
         parent::_joinTables();
 
         $this->_select->joinInner( Cms_Page::TableName(), 'gal_page_id = pg_id' );
+    }
+
+    public function pageAction()
+    {
+	// if we have multiple language page records 
+	if ( ! $this->_hasParam('pg_slug') ) {
+		throw new App_Exception( 'pg_slug is missing' );
+	}
+	$select = Cms_Page::Table()->select()->where( 'pg_slug = ?', $this->_getParam( 'pg_slug') );
+        $arrPageIds = Cms_Page::Table()->fetchAll( $select )->getIds();
+	if ( count( $arrPageIds ) == 0 ) {
+		throw new App_Exception( 'IDs of the pages are missing' );
+	}
+
+	$selectGallery = Gallery_Entry::Table()->select()->setIntegrityCheck( false )
+		->from( Gallery_Entry::Table() )
+		->joinInner( Cms_Page::TableName(), 'gal_page_id = pg_id' )
+                ->where( 'gal_page_id IN ('. implode( ",", $arrPageIds ) . ')' );
+
+        $objGallery = Gallery_Entry::Table()->fetchRow( $selectGallery );
+        if ( !is_object( $objGallery ) ) {
+		throw new App_Exception( 'Gallery was not found' );
+	}
+	$this->view->object  = $objGallery;
+	$this->view->page = $objGallery->getJoinedObject( Cms_Page::Table(), 'pg_id', 'gal_page_id' );
     }
 
     public function getAction()
@@ -21,6 +45,7 @@ class Gallery_EntryCtrl extends App_DbTableCtrl
                 $strLang = $this->_getParam( 'lang', '' );
                 $objPage = Cms_Page::Table()->findBySlug(
                         $this->_getParam( 'pg_slug'), $strLang );
+		$this->view->page = $objPage;
                 if ( is_object( $objPage )) {
                     $selectGallery = Gallery_Entry::Table()
                         ->select()
