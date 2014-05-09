@@ -31,7 +31,12 @@ class Gallery_EntryCtrl extends App_DbTableCtrl
 		throw new App_Exception( 'Gallery was not found' );
 	}
 	$this->view->object  = $objGallery;
-	$this->view->page = $objGallery->getJoinedObject( Cms_Page::Table(), 'pg_id', 'gal_page_id' );
+
+	$selectPage = Cms_Page::Table()->select()->where( 'pg_slug = ?', $this->_getParam( 'pg_slug') );
+	if ( $this->_getParam( 'lang' ) ) {
+		$selectPage->where( 'pg_lang = ?', $this->_getParam( 'lang' ));
+	}
+	$this->view->page = Cms_Page::Table()->fetchRow( $selectPage );
     }
 
     public function getAction()
